@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="20086" systemVersion="21G115" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="GameData" representedClassName=".GameData" syncable="YES" codeGenerationType="category">
+        <attribute name="gameType" optional="YES" attributeType="String"/>
+        <attribute name="score" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="status" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="time" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="player" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Player" inverseName="gamedata" inverseEntity="Player"/>
+    </entity>
+    <entity name="Player" representedClassName=".Player" syncable="YES" codeGenerationType="category">
+        <attribute name="playerId" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="playerName" optional="YES" attributeType="String"/>
+        <relationship name="gamedata" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GameData" inverseName="player" inverseEntity="GameData"/>
+    </entity>
+    <elements>
+        <element name="GameData" positionX="160" positionY="192" width="128" height="104"/>
+        <element name="Player" positionX="160" positionY="192" width="128" height="74"/>
+    </elements>
+</model>
