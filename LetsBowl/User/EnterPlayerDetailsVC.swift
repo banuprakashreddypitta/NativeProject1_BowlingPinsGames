@@ -15,7 +15,13 @@ class EnterPlayerDetailsVC: UIViewController, UITableViewDelegate, UITableViewDa
     @IBOutlet weak var playerName1TxtFld: UITextField!
     @IBOutlet weak var playerName2TxtFld: UITextField!
     @IBOutlet weak var playerListTableView: UITableView!
+    @IBOutlet weak var fieldsBGView: UIView!
+    @IBOutlet weak var fieldsBGViewConstraint: NSLayoutConstraint!
+    @IBOutlet weak var player1HeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var player2HeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var playBtnHeightConstraint: NSLayoutConstraint!
     
+    var bowlAnimateView: UIImageView!
     let managedContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     var playerDetailsVM: EnterPlayerDetailsViewModel = EnterPlayerDetailsViewModel()
     
@@ -25,7 +31,17 @@ class EnterPlayerDetailsVC: UIViewController, UITableViewDelegate, UITableViewDa
         self.title = "Enter Player Details"
         self.playerListTableView.isHidden = true
         self.playerName2TxtFld.isUserInteractionEnabled = false
+        addBackgroundImage()
+        setCornerRadius()
+        addBlurEffectToFieldsView()
+        self.hideTitleLabel(for: true)
+        hideOrDisplayBtn(for: true)
         playerDetailsVM.getPlayerList()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        showfields()
     }
     
     // MARK: - IB actions
@@ -80,6 +96,48 @@ class EnterPlayerDetailsVC: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     // MARK: - helper functions
+    
+    func addBackgroundImage() {
+        bowlAnimateView = UIImageView(frame: self.view.frame)
+        self.view.addSubview(bowlAnimateView)
+        bowlAnimateView.contentMode = .scaleToFill
+        let image = UIImage(named: AppConstants.bgImage)
+        self.bowlAnimateView.image = image
+        self.view.sendSubviewToBack(self.bowlAnimateView)
+    }
+    
+    func showfields() {
+        UIView.animate(withDuration: AppConstants.animationDuration, animations: { [weak self] in
+            self?.hideOrDisplayBtn(for: false)
+            self?.view.layoutIfNeeded()
+        }, completion: { [weak self] _ in
+            self?.hideTitleLabel(for: false)
+            self?.fieldsBGView.dropShadow(color: AppConstants.shawdowColor, opacity: 1, offSet: CGSize(width: -1, height: 1), radius: 5, scale: true)
+        })
+    }
+    
+    func addBlurEffectToFieldsView() {
+        fieldsBGView.addBlurEffect()
+    }
+    
+    func setCornerRadius() {
+        fieldsBGView.layer.cornerRadius = 10
+        playerName1TxtFld.layer.cornerRadius = 5.0
+        playerName2TxtFld.layer.cornerRadius = 5.0
+        playBtn.layer.cornerRadius = 5.0
+    }
+    
+    func hideOrDisplayBtn(for hide: Bool) {
+        let fieldHeight: CGFloat = hide ? 0 : 40
+        fieldsBGViewConstraint.constant = hide ? 0 : 180
+        player1HeightConstraint.constant = fieldHeight
+        player2HeightConstraint.constant = fieldHeight
+        playBtnHeightConstraint.constant = fieldHeight
+    }
+    
+    func hideTitleLabel(for hide: Bool) {
+        self.playBtn.titleLabel?.isHidden = hide
+    }
     
     func loadPlayerVCWith(player: [Player]) {
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)

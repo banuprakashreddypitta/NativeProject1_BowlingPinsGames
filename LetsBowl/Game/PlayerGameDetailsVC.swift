@@ -12,6 +12,9 @@ import CoreData
 class PlayerGameDetailsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var gameDetailsTblView: UITableView!
+    @IBOutlet weak var emptyPlayHistoryLbl: UILabel!
+    
+    var bowlAnimateView: UIImageView!
     var sections: [Section] = []
     let managedContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     let dateFormatter = DateFormatter()
@@ -22,6 +25,10 @@ class PlayerGameDetailsVC: UIViewController, UITableViewDelegate, UITableViewDat
         self.title = "Player History"
         dateFormatter.dateFormat = "dd-MMM-yyyy"
         sections = sortElementsByDate()
+        addBackgroundImage()
+        if sections.count == 0 {
+            emptyPlayHistoryLbl.isHidden = false
+        }
     }
     
     // MARK: - tableview methods
@@ -58,6 +65,17 @@ class PlayerGameDetailsVC: UIViewController, UITableViewDelegate, UITableViewDat
             return cell
         }
         return UITableViewCell()
+    }
+    
+    // MARK: - Helper functions
+    
+    func addBackgroundImage() {
+        bowlAnimateView = UIImageView(frame: self.view.frame)
+        self.view.addSubview(bowlAnimateView)
+        bowlAnimateView.contentMode = .scaleToFill
+        let image = UIImage(named: AppConstants.bgImage)
+        self.bowlAnimateView.image = image
+        self.view.sendSubviewToBack(self.bowlAnimateView)
     }
     
     // MARK: - date helper
